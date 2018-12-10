@@ -45,14 +45,14 @@ async function find_play_results() {
             var schedule_list = $('li', '.home__schedule-list');
             schedule_list.each(function () {
                 var list = [];
+                var date = $('.home__schedule-item-title-date', $(this)).text();
+                list.push(date);
                 var team = $('.home__schedule-item-score-item', $(this));
                 team.each(function () {
-                    var team_name = $('.home__schedule-item-score-item-name', $(this));
-                    
-                    var team_score = $('.home__schedule-item-score-item-score', $(this));
-                    list.push([team_name.text(), team_score.text()]);
+                    var team_name = $('.home__schedule-item-score-item-name', $(this)).text();
+                    var team_score = $('.home__schedule-item-score-item-score', $(this)).text();
+                    list.push([team_name, team_score]);
                 });
-                //console.log($(team_name).text());
                 result.push(list);
             });
         })
