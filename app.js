@@ -2,7 +2,9 @@ const selenium = require('selenium-webdriver');
 require('chromedriver');
 var cheerio = require('cheerio');
 const By = selenium.By;
-
+find_team_ranks().then(function (result) {
+    console.log(result);
+});
 //find_team_results('skt').then(function (result) {
 //    console.log(result);
 //});
@@ -10,6 +12,37 @@ const By = selenium.By;
 //    console.log(result);
 
 //});
+//dbook__leaderboard - item
+
+async function find_team_ranks() {
+    let driver = await new selenium.Builder().forBrowser("chrome").build();
+    try {
+        await driver.get('http://best.gg/standings/team/league=lck');
+        var buton_list = driver.findElement(By.className('dbook__filter'));
+        buton_list.then(function (b) {
+            var third_buton = buton_list.findElements(By.className('btn-group'));
+            third_buton.then(function () {
+                console.log(third_buton[2].getText());
+            })
+            
+        })
+    } finally {
+        var result = [];
+        var elem = driver.getPageSource();
+        elem.then(function (v) {
+            var $ = cheerio.load(v);
+            var rank_list = $('.dbook__leaderboard-item');
+            rank_list.each(function () {
+                var rank = $('.dbook__leaderboard-rank', $(this)).text();
+                var team_name = $('.dbook__leaderboard-name-team', $(this)).text();
+                result.push([rank, team_name]);
+            });
+        })
+
+       // await driver.quit();
+        return result;
+    }
+}
 async function find_team_results(team_name) {
     let driver = await new selenium.Builder().forBrowser("chrome").build();
     try {
